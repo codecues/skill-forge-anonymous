@@ -1,9 +1,10 @@
+
 import React, { useState, useMemo } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Sparkles, User, Eye, ExternalLink, Tag, TrendingUp, Filter } from 'lucide-react';
+import { Sparkles, User, Eye, ExternalLink, Tag, TrendingUp, Filter, Award, Folder, Video, Code } from 'lucide-react';
 
 interface UserProfile {
   alias: string;
@@ -19,11 +20,13 @@ interface PersonalizedFeedProps {
 const PersonalizedFeed = ({ userProfile }: PersonalizedFeedProps) => {
   const [relevanceFilter, setRelevanceFilter] = useState('all');
   const [categoryFilter, setCategoryFilter] = useState('all');
+  const [contentTypeFilter, setContentTypeFilter] = useState('all');
 
-  // Sample projects from other users that would be fetched from backend
-  const allProjects = [
+  // Sample feed items from other users that would be fetched from backend
+  const allFeedItems = [
     {
       id: '1',
+      type: 'project',
       title: 'Advanced React Dashboard',
       description: 'Interactive dashboard with real-time data visualization using React and D3.js',
       author: 'ReactMaster99',
@@ -34,10 +37,12 @@ const PersonalizedFeed = ({ userProfile }: PersonalizedFeedProps) => {
       views: 245,
       relevanceScore: 95,
       githubUrl: 'https://github.com/example/react-dashboard',
-      liveUrl: 'https://react-dashboard.example.com'
+      liveUrl: 'https://react-dashboard.example.com',
+      mediaType: 'Software'
     },
     {
       id: '2',
+      type: 'project',
       title: 'Python Data Analysis Pipeline',
       description: 'Automated data processing pipeline for analyzing large datasets with Python and Pandas',
       author: 'DataWizard23',
@@ -47,10 +52,12 @@ const PersonalizedFeed = ({ userProfile }: PersonalizedFeedProps) => {
       category: 'Data Science',
       views: 189,
       relevanceScore: 75,
-      githubUrl: 'https://github.com/example/data-pipeline'
+      githubUrl: 'https://github.com/example/data-pipeline',
+      mediaType: 'Software'
     },
     {
       id: '3',
+      type: 'project',
       title: 'Mobile UI/UX Design System',
       description: 'Comprehensive design system for mobile applications with Figma components',
       author: 'DesignPro456',
@@ -60,51 +67,73 @@ const PersonalizedFeed = ({ userProfile }: PersonalizedFeedProps) => {
       category: 'Design',
       views: 321,
       relevanceScore: 85,
-      liveUrl: 'https://design-system.example.com'
+      liveUrl: 'https://design-system.example.com',
+      mediaType: 'Design'
     },
     {
       id: '4',
-      title: 'React Native E-commerce App',
-      description: 'Full-featured mobile e-commerce application with payment integration',
-      author: 'MobileDev789',
-      authorColor: 'bg-orange-500',
-      skills: ['React', 'React Native', 'JavaScript', 'Firebase'],
-      tags: ['Mobile', 'E-commerce', 'Payment'],
-      category: 'Mobile Development',
-      views: 156,
-      relevanceScore: 80,
-      githubUrl: 'https://github.com/example/rn-ecommerce'
+      type: 'project',
+      title: 'Product Demo Video Series',
+      description: 'Professional video demonstrations showcasing software features and user workflows',
+      author: 'VideoMaker101',
+      authorColor: 'bg-red-500',
+      skills: ['Video Editing', 'Storytelling', 'Adobe Premiere', 'After Effects'],
+      tags: ['Video Production', 'Demo', 'Marketing'],
+      category: 'Content Creation',
+      views: 412,
+      relevanceScore: 60,
+      videoUrl: 'https://youtube.com/watch?v=example',
+      mediaType: 'Video'
     },
     {
       id: '5',
-      title: 'TypeScript API Framework',
-      description: 'Lightweight REST API framework built with TypeScript and Express',
-      author: 'BackendGuru12',
-      authorColor: 'bg-red-500',
-      skills: ['TypeScript', 'Node.js', 'Express', 'MongoDB'],
-      tags: ['Backend', 'API', 'Framework'],
-      category: 'Backend Development',
-      views: 98,
-      relevanceScore: 60,
-      githubUrl: 'https://github.com/example/ts-api-framework'
+      type: 'certificate',
+      title: 'AWS Solutions Architect Professional',
+      description: 'Advanced certification covering complex AWS architectures and best practices',
+      author: 'CloudExpert789',
+      authorColor: 'bg-orange-500',
+      skills: ['AWS', 'Cloud Architecture', 'DevOps', 'Infrastructure'],
+      tags: ['Cloud', 'AWS', 'Architecture'],
+      category: 'Cloud Computing',
+      views: 156,
+      relevanceScore: 80,
+      issuer: 'Amazon Web Services',
+      date: '2024-03-15',
+      verificationUrl: 'https://aws.amazon.com/verification/example'
+    },
+    {
+      id: '6',
+      type: 'certificate',
+      title: 'Google UX Design Professional Certificate',
+      description: 'Comprehensive UX design program covering user research, prototyping, and testing',
+      author: 'UXDesigner456',
+      authorColor: 'bg-pink-500',
+      skills: ['UX Design', 'User Research', 'Prototyping', 'Figma'],
+      tags: ['UX Design', 'Google', 'Professional'],
+      category: 'Design',
+      views: 298,
+      relevanceScore: 90,
+      issuer: 'Google via Coursera',
+      date: '2024-02-20',
+      verificationUrl: 'https://coursera.org/verify/example'
     }
   ];
 
   // Calculate relevance based on user's skills
-  const calculateRelevance = (projectSkills: string[]) => {
+  const calculateRelevance = (itemSkills: string[]) => {
     const userSkills = userProfile.skills.map(skill => skill.name.toLowerCase());
-    const matchingSkills = projectSkills.filter(skill => 
+    const matchingSkills = itemSkills.filter(skill => 
       userSkills.includes(skill.toLowerCase())
     );
-    return (matchingSkills.length / projectSkills.length) * 100;
+    return (matchingSkills.length / itemSkills.length) * 100;
   };
 
-  // Enhanced projects with calculated relevance
-  const enhancedProjects = useMemo(() => {
-    return allProjects.map(project => ({
-      ...project,
-      calculatedRelevance: calculateRelevance(project.skills),
-      matchingSkills: project.skills.filter(skill =>
+  // Enhanced feed items with calculated relevance
+  const enhancedFeedItems = useMemo(() => {
+    return allFeedItems.map(item => ({
+      ...item,
+      calculatedRelevance: calculateRelevance(item.skills),
+      matchingSkills: item.skills.filter(skill =>
         userProfile.skills.some(userSkill => 
           userSkill.name.toLowerCase() === skill.toLowerCase()
         )
@@ -112,25 +141,30 @@ const PersonalizedFeed = ({ userProfile }: PersonalizedFeedProps) => {
     }));
   }, [userProfile.skills]);
 
-  // Filter projects based on user preferences
-  const filteredProjects = useMemo(() => {
-    let filtered = [...enhancedProjects];
+  // Filter items based on user preferences
+  const filteredItems = useMemo(() => {
+    let filtered = [...enhancedFeedItems];
 
     // Filter by relevance
     if (relevanceFilter === 'high') {
-      filtered = filtered.filter(project => project.calculatedRelevance >= 50);
+      filtered = filtered.filter(item => item.calculatedRelevance >= 50);
     } else if (relevanceFilter === 'medium') {
-      filtered = filtered.filter(project => project.calculatedRelevance >= 25 && project.calculatedRelevance < 50);
+      filtered = filtered.filter(item => item.calculatedRelevance >= 25 && item.calculatedRelevance < 50);
     }
 
     // Filter by category
     if (categoryFilter !== 'all') {
-      filtered = filtered.filter(project => project.category === categoryFilter);
+      filtered = filtered.filter(item => item.category === categoryFilter);
+    }
+
+    // Filter by content type
+    if (contentTypeFilter !== 'all') {
+      filtered = filtered.filter(item => item.type === contentTypeFilter);
     }
 
     // Sort by relevance score
     return filtered.sort((a, b) => b.calculatedRelevance - a.calculatedRelevance);
-  }, [enhancedProjects, relevanceFilter, categoryFilter]);
+  }, [enhancedFeedItems, relevanceFilter, categoryFilter, contentTypeFilter]);
 
   const getRelevanceBadgeColor = (relevance: number) => {
     if (relevance >= 50) return 'bg-green-100 text-green-800';
@@ -138,7 +172,18 @@ const PersonalizedFeed = ({ userProfile }: PersonalizedFeedProps) => {
     return 'bg-gray-100 text-gray-800';
   };
 
-  const categories = [...new Set(allProjects.map(p => p.category))];
+  const getTypeIcon = (type: string, mediaType?: string) => {
+    if (type === 'certificate') return <Award className="w-4 h-4" />;
+    if (mediaType === 'Video') return <Video className="w-4 h-4" />;
+    if (mediaType === 'Software') return <Code className="w-4 h-4" />;
+    return <Folder className="w-4 h-4" />;
+  };
+
+  const getTypeColor = (type: string) => {
+    return type === 'certificate' ? 'bg-yellow-100 text-yellow-800' : 'bg-blue-100 text-blue-800';
+  };
+
+  const categories = [...new Set(allFeedItems.map(item => item.category))];
 
   return (
     <div className="space-y-6">
@@ -147,12 +192,12 @@ const PersonalizedFeed = ({ userProfile }: PersonalizedFeedProps) => {
         <div>
           <h2 className="text-2xl font-bold flex items-center gap-2">
             <Sparkles className="w-6 h-6 text-blue-600" />
-            Personalized Feed
+            Discover Feed
           </h2>
-          <p className="text-gray-600">Projects tailored to your skills and interests</p>
+          <p className="text-gray-600">Projects and certifications tailored to your skills and interests</p>
         </div>
         <div className="text-sm text-gray-500">
-          {filteredProjects.length} relevant projects found
+          {filteredItems.length} relevant items found
         </div>
       </div>
 
@@ -187,12 +232,23 @@ const PersonalizedFeed = ({ userProfile }: PersonalizedFeedProps) => {
               <span className="font-medium">Filters:</span>
             </div>
             
+            <Select value={contentTypeFilter} onValueChange={setContentTypeFilter}>
+              <SelectTrigger className="w-full md:w-48">
+                <SelectValue placeholder="Content Type" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All Content</SelectItem>
+                <SelectItem value="project">Projects Only</SelectItem>
+                <SelectItem value="certificate">Certificates Only</SelectItem>
+              </SelectContent>
+            </Select>
+
             <Select value={relevanceFilter} onValueChange={setRelevanceFilter}>
               <SelectTrigger className="w-full md:w-48">
                 <SelectValue placeholder="Relevance" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="all">All Projects</SelectItem>
+                <SelectItem value="all">All Items</SelectItem>
                 <SelectItem value="high">High Relevance (50%+)</SelectItem>
                 <SelectItem value="medium">Medium Relevance (25-50%)</SelectItem>
               </SelectContent>
@@ -217,6 +273,7 @@ const PersonalizedFeed = ({ userProfile }: PersonalizedFeedProps) => {
               onClick={() => {
                 setRelevanceFilter('all');
                 setCategoryFilter('all');
+                setContentTypeFilter('all');
               }}
             >
               Clear
@@ -225,42 +282,56 @@ const PersonalizedFeed = ({ userProfile }: PersonalizedFeedProps) => {
         </CardContent>
       </Card>
 
-      {/* Projects Grid */}
+      {/* Feed Items Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {filteredProjects.map((project) => (
-          <Card key={project.id} className="hover:shadow-lg transition-shadow border-l-4 border-l-blue-500">
+        {filteredItems.map((item) => (
+          <Card key={item.id} className="hover:shadow-lg transition-shadow border-l-4 border-l-blue-500">
             <CardContent className="p-6">
               {/* Author and Relevance */}
               <div className="flex items-center justify-between mb-4">
                 <div className="flex items-center gap-3">
-                  <div className={`w-8 h-8 rounded-full ${project.authorColor} flex items-center justify-center`}>
+                  <div className={`w-8 h-8 rounded-full ${item.authorColor} flex items-center justify-center`}>
                     <User className="w-4 h-4 text-white" />
                   </div>
                   <div>
-                    <p className="font-medium text-sm">{project.author}</p>
+                    <p className="font-medium text-sm">{item.author}</p>
                     <div className="flex items-center gap-2 text-xs text-gray-500">
                       <Eye className="w-3 h-3" />
-                      {project.views} views
+                      {item.views} views
                     </div>
                   </div>
                 </div>
-                <Badge className={getRelevanceBadgeColor(project.calculatedRelevance)}>
-                  {Math.round(project.calculatedRelevance)}% match
-                </Badge>
+                <div className="flex flex-col gap-1">
+                  <Badge className={getRelevanceBadgeColor(item.calculatedRelevance)}>
+                    {Math.round(item.calculatedRelevance)}% match
+                  </Badge>
+                  <Badge className={getTypeColor(item.type)}>
+                    {getTypeIcon(item.type, item.mediaType)}
+                    <span className="ml-1 capitalize">{item.type}</span>
+                  </Badge>
+                </div>
               </div>
 
-              {/* Project Details */}
-              <h3 className="font-semibold text-lg mb-2">{project.title}</h3>
+              {/* Item Details */}
+              <h3 className="font-semibold text-lg mb-2">{item.title}</h3>
               <p className="text-gray-700 text-sm leading-relaxed mb-4 line-clamp-3">
-                {project.description}
+                {item.description}
               </p>
 
+              {/* Certificate specific info */}
+              {item.type === 'certificate' && (item.issuer || item.date) && (
+                <div className="mb-3 p-2 bg-yellow-50 rounded">
+                  {item.issuer && <p className="text-xs font-medium text-yellow-800">Issued by: {item.issuer}</p>}
+                  {item.date && <p className="text-xs text-yellow-700">Date: {new Date(item.date).toLocaleDateString()}</p>}
+                </div>
+              )}
+
               {/* Matching Skills */}
-              {project.matchingSkills.length > 0 && (
+              {item.matchingSkills.length > 0 && (
                 <div className="mb-3">
                   <p className="text-xs font-medium text-green-600 mb-1">YOUR SKILLS:</p>
                   <div className="flex flex-wrap gap-1">
-                    {project.matchingSkills.map((skill, index) => (
+                    {item.matchingSkills.map((skill, index) => (
                       <Badge key={index} className="bg-green-100 text-green-800 text-xs">
                         {skill}
                       </Badge>
@@ -273,12 +344,12 @@ const PersonalizedFeed = ({ userProfile }: PersonalizedFeedProps) => {
               <div className="mb-4">
                 <p className="text-xs font-medium text-gray-500 mb-2">ALL SKILLS:</p>
                 <div className="flex flex-wrap gap-1">
-                  {project.skills.slice(0, 4).map((skill, index) => (
+                  {item.skills.slice(0, 4).map((skill, index) => (
                     <Badge 
                       key={index} 
                       variant="outline" 
                       className={`text-xs ${
-                        project.matchingSkills.includes(skill) 
+                        item.matchingSkills.includes(skill) 
                           ? 'border-green-500 text-green-700' 
                           : ''
                       }`}
@@ -286,9 +357,9 @@ const PersonalizedFeed = ({ userProfile }: PersonalizedFeedProps) => {
                       {skill}
                     </Badge>
                   ))}
-                  {project.skills.length > 4 && (
+                  {item.skills.length > 4 && (
                     <Badge variant="outline" className="text-xs">
-                      +{project.skills.length - 4} more
+                      +{item.skills.length - 4} more
                     </Badge>
                   )}
                 </div>
@@ -297,7 +368,7 @@ const PersonalizedFeed = ({ userProfile }: PersonalizedFeedProps) => {
               {/* Tags */}
               <div className="mb-4">
                 <div className="flex flex-wrap gap-1">
-                  {project.tags.map((tag, index) => (
+                  {item.tags.map((tag, index) => (
                     <Badge key={index} variant="secondary" className="text-xs">
                       <Tag className="w-3 h-3 mr-1" />
                       {tag}
@@ -307,27 +378,49 @@ const PersonalizedFeed = ({ userProfile }: PersonalizedFeedProps) => {
               </div>
 
               {/* Links */}
-              <div className="flex gap-2">
-                {project.githubUrl && (
+              <div className="flex flex-wrap gap-2">
+                {item.githubUrl && (
                   <Button
                     variant="outline"
                     size="sm"
-                    onClick={() => window.open(project.githubUrl, '_blank')}
-                    className="flex-1"
+                    onClick={() => window.open(item.githubUrl, '_blank')}
+                    className="flex-1 min-w-0"
                   >
-                    <ExternalLink className="w-4 h-4 mr-1" />
+                    <Code className="w-4 h-4 mr-1" />
                     Code
                   </Button>
                 )}
-                {project.liveUrl && (
+                {item.liveUrl && (
                   <Button
                     variant="outline"
                     size="sm"
-                    onClick={() => window.open(project.liveUrl, '_blank')}
-                    className="flex-1"
+                    onClick={() => window.open(item.liveUrl, '_blank')}
+                    className="flex-1 min-w-0"
                   >
                     <ExternalLink className="w-4 h-4 mr-1" />
                     Demo
+                  </Button>
+                )}
+                {item.videoUrl && (
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => window.open(item.videoUrl, '_blank')}
+                    className="flex-1 min-w-0"
+                  >
+                    <Video className="w-4 h-4 mr-1" />
+                    Video
+                  </Button>
+                )}
+                {item.verificationUrl && (
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => window.open(item.verificationUrl, '_blank')}
+                    className="flex-1 min-w-0"
+                  >
+                    <Award className="w-4 h-4 mr-1" />
+                    Verify
                   </Button>
                 )}
               </div>
@@ -337,19 +430,20 @@ const PersonalizedFeed = ({ userProfile }: PersonalizedFeedProps) => {
       </div>
 
       {/* No Results */}
-      {filteredProjects.length === 0 && (
+      {filteredItems.length === 0 && (
         <Card>
           <CardContent className="text-center py-12">
             <Sparkles className="w-16 h-16 mx-auto mb-4 text-gray-300" />
-            <h3 className="text-lg font-semibold text-gray-600 mb-2">No Relevant Projects Found</h3>
+            <h3 className="text-lg font-semibold text-gray-600 mb-2">No Relevant Content Found</h3>
             <p className="text-gray-500 mb-4">
-              Try adjusting your filters or add more skills to your profile to discover relevant projects.
+              Try adjusting your filters or add more skills to your profile to discover relevant content.
             </p>
             <Button
               variant="outline"
               onClick={() => {
                 setRelevanceFilter('all');
                 setCategoryFilter('all');
+                setContentTypeFilter('all');
               }}
             >
               Clear All Filters

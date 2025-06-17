@@ -3,10 +3,11 @@ import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { User, BookOpen, Award, Folder, Sparkles } from 'lucide-react';
+import { User, BookOpen, Award, Folder, Sparkles, Briefcase } from 'lucide-react';
 import SkillManager from '@/components/SkillManager';
 import CertificateManager from '@/components/CertificateManager';
 import ProjectManager from '@/components/ProjectManager';
+import InternshipManager from '@/components/InternshipManager';
 import PersonalizedFeed from '@/components/PersonalizedFeed';
 
 const Index = () => {
@@ -41,6 +42,19 @@ const Index = () => {
         githubLink: 'https://github.com/example',
         imageUrl: '/placeholder.svg'
       },
+    ],
+    internships: [
+      {
+        id: '1',
+        company: 'Tech Innovations Inc.',
+        position: 'Frontend Developer Intern',
+        duration: '3 months',
+        startDate: '2024-06-01',
+        endDate: '2024-08-31',
+        description: 'Worked on user interface development using React and collaborated with senior developers on mobile-responsive web applications.',
+        skills: ['React', 'JavaScript', 'CSS'],
+        type: 'Remote'
+      },
     ]
   });
 
@@ -48,6 +62,7 @@ const Index = () => {
     { id: 'skills', label: 'Skills', icon: BookOpen },
     { id: 'certificates', label: 'Certificates', icon: Award },
     { id: 'projects', label: 'Projects', icon: Folder },
+    { id: 'internships', label: 'Internships', icon: Briefcase },
     { id: 'feed', label: 'Discover', icon: Sparkles },
   ];
 
@@ -59,6 +74,8 @@ const Index = () => {
         return <CertificateManager />;
       case 'projects':
         return <ProjectManager />;
+      case 'internships':
+        return <InternshipManager />;
       case 'feed':
         return <PersonalizedFeed userProfile={userProfile} />;
       default:
@@ -95,10 +112,10 @@ const Index = () => {
                 <Button
                   key={tab.id}
                   variant={activeTab === tab.id ? "default" : "ghost"}
-                  className={`flex-shrink-0 rounded-none border-b-2 ${
+                  className={`flex-shrink-0 rounded-none border-b-2 transition-colors ${
                     activeTab === tab.id 
-                      ? 'border-blue-500 bg-blue-50' 
-                      : 'border-transparent hover:bg-gray-50'
+                      ? 'border-blue-500 bg-blue-50 text-blue-600' 
+                      : 'border-transparent hover:bg-gray-50 hover:text-gray-900'
                   }`}
                   onClick={() => setActiveTab(tab.id)}
                 >

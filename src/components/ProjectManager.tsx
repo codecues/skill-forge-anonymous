@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
-import { Folder, PlusCircle, ExternalLink, Tag, Image } from 'lucide-react';
+import { Folder, PlusCircle, ExternalLink, Tag, Image, Video, Code } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 
 interface Project {
@@ -17,7 +17,9 @@ interface Project {
   mediaUrl?: string;
   githubUrl?: string;
   liveUrl?: string;
+  videoUrl?: string;
   type: 'Personal' | 'Academic' | 'Hobby';
+  mediaType: 'Software' | 'Video' | 'Design' | 'Research' | 'Other';
 }
 
 const ProjectManager = () => {
@@ -31,7 +33,8 @@ const ProjectManager = () => {
       tags: ['Web Development', 'Full Stack', 'Dashboard'],
       githubUrl: 'https://github.com/example/dashboard',
       liveUrl: 'https://dashboard.example.com',
-      type: 'Personal'
+      type: 'Personal',
+      mediaType: 'Software'
     },
     {
       id: '2',
@@ -40,7 +43,18 @@ const ProjectManager = () => {
       skills: ['React Native', 'JavaScript', 'API Integration'],
       tags: ['Mobile', 'Weather', 'UI/UX'],
       githubUrl: 'https://github.com/example/weather-app',
-      type: 'Hobby'
+      type: 'Hobby',
+      mediaType: 'Software'
+    },
+    {
+      id: '3',
+      title: 'Product Demo Video',
+      description: 'Created a professional product demonstration video showcasing key features and user experience flow.',
+      skills: ['Video Editing', 'Storytelling', 'Adobe Premiere'],
+      tags: ['Video Production', 'Marketing', 'Demo'],
+      videoUrl: 'https://youtube.com/watch?v=example',
+      type: 'Personal',
+      mediaType: 'Video'
     }
   ]);
 
@@ -51,7 +65,9 @@ const ProjectManager = () => {
     tags: '',
     githubUrl: '',
     liveUrl: '',
-    type: 'Personal' as Project['type']
+    videoUrl: '',
+    type: 'Personal' as Project['type'],
+    mediaType: 'Software' as Project['mediaType']
   });
 
   const [showForm, setShowForm] = useState(false);
@@ -74,7 +90,9 @@ const ProjectManager = () => {
       tags: newProject.tags.split(',').map(t => t.trim()).filter(t => t),
       githubUrl: newProject.githubUrl || undefined,
       liveUrl: newProject.liveUrl || undefined,
-      type: newProject.type
+      videoUrl: newProject.videoUrl || undefined,
+      type: newProject.type,
+      mediaType: newProject.mediaType
     };
 
     setProjects([project, ...projects]);
@@ -85,7 +103,9 @@ const ProjectManager = () => {
       tags: '',
       githubUrl: '',
       liveUrl: '',
-      type: 'Personal'
+      videoUrl: '',
+      type: 'Personal',
+      mediaType: 'Software'
     });
     setShowForm(false);
     
@@ -102,6 +122,26 @@ const ProjectManager = () => {
       'Hobby': 'bg-purple-100 text-purple-800'
     };
     return colors[type as keyof typeof colors] || colors['Personal'];
+  };
+
+  const getMediaTypeIcon = (mediaType: string) => {
+    switch (mediaType) {
+      case 'Software': return <Code className="w-4 h-4" />;
+      case 'Video': return <Video className="w-4 h-4" />;
+      case 'Design': return <Image className="w-4 h-4" />;
+      default: return <Folder className="w-4 h-4" />;
+    }
+  };
+
+  const getMediaTypeColor = (mediaType: string) => {
+    const colors = {
+      'Software': 'bg-green-100 text-green-800',
+      'Video': 'bg-red-100 text-red-800',
+      'Design': 'bg-pink-100 text-pink-800',
+      'Research': 'bg-orange-100 text-orange-800',
+      'Other': 'bg-gray-100 text-gray-800'
+    };
+    return colors[mediaType as keyof typeof colors] || colors['Other'];
   };
 
   return (
@@ -152,6 +192,21 @@ const ProjectManager = () => {
             </div>
 
             <div>
+              <label className="text-sm font-medium mb-1 block">Media Type</label>
+              <select
+                className="w-full p-2 border border-gray-300 rounded-md"
+                value={newProject.mediaType}
+                onChange={(e) => setNewProject({ ...newProject, mediaType: e.target.value as Project['mediaType'] })}
+              >
+                <option value="Software">Software/Code</option>
+                <option value="Video">Video Demonstration</option>
+                <option value="Design">Design/Visual</option>
+                <option value="Research">Research/Analysis</option>
+                <option value="Other">Other</option>
+              </select>
+            </div>
+
+            <div>
               <label className="text-sm font-medium mb-1 block">Description *</label>
               <Textarea
                 placeholder="Describe your project..."
@@ -165,7 +220,7 @@ const ProjectManager = () => {
               <div>
                 <label className="text-sm font-medium mb-1 block">Skills Used</label>
                 <Input
-                  placeholder="React, Python, MongoDB (comma-separated)"
+                  placeholder="React, Python, Video Editing (comma-separated)"
                   value={newProject.skills}
                   onChange={(e) => setNewProject({ ...newProject, skills: e.target.value })}
                 />
@@ -173,14 +228,14 @@ const ProjectManager = () => {
               <div>
                 <label className="text-sm font-medium mb-1 block">Tags</label>
                 <Input
-                  placeholder="Web Dev, Full Stack, API (comma-separated)"
+                  placeholder="Web Dev, Demo, Creative (comma-separated)"
                   value={newProject.tags}
                   onChange={(e) => setNewProject({ ...newProject, tags: e.target.value })}
                 />
               </div>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <div>
                 <label className="text-sm font-medium mb-1 block">GitHub URL</label>
                 <Input
@@ -195,6 +250,14 @@ const ProjectManager = () => {
                   placeholder="https://project.example.com"
                   value={newProject.liveUrl}
                   onChange={(e) => setNewProject({ ...newProject, liveUrl: e.target.value })}
+                />
+              </div>
+              <div>
+                <label className="text-sm font-medium mb-1 block">Video URL</label>
+                <Input
+                  placeholder="https://youtube.com/watch?v=..."
+                  value={newProject.videoUrl}
+                  onChange={(e) => setNewProject({ ...newProject, videoUrl: e.target.value })}
                 />
               </div>
             </div>
@@ -219,12 +282,18 @@ const ProjectManager = () => {
               <div className="flex items-start justify-between mb-4">
                 <div>
                   <h3 className="font-semibold text-lg mb-2">{project.title}</h3>
-                  <Badge className={getTypeColor(project.type)}>
-                    {project.type}
-                  </Badge>
+                  <div className="flex gap-2 mb-2">
+                    <Badge className={getTypeColor(project.type)}>
+                      {project.type}
+                    </Badge>
+                    <Badge className={getMediaTypeColor(project.mediaType)}>
+                      {getMediaTypeIcon(project.mediaType)}
+                      <span className="ml-1">{project.mediaType}</span>
+                    </Badge>
+                  </div>
                 </div>
                 <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center">
-                  <Folder className="w-6 h-6 text-green-600" />
+                  {getMediaTypeIcon(project.mediaType)}
                 </div>
               </div>
 
@@ -262,15 +331,15 @@ const ProjectManager = () => {
               )}
 
               {/* Links */}
-              <div className="flex gap-2 mt-4">
+              <div className="flex flex-wrap gap-2 mt-4">
                 {project.githubUrl && (
                   <Button
                     variant="outline"
                     size="sm"
                     onClick={() => window.open(project.githubUrl, '_blank')}
-                    className="flex-1"
+                    className="flex-1 min-w-0"
                   >
-                    <ExternalLink className="w-4 h-4 mr-1" />
+                    <Code className="w-4 h-4 mr-1" />
                     Code
                   </Button>
                 )}
@@ -279,10 +348,21 @@ const ProjectManager = () => {
                     variant="outline"
                     size="sm"
                     onClick={() => window.open(project.liveUrl, '_blank')}
-                    className="flex-1"
+                    className="flex-1 min-w-0"
                   >
                     <ExternalLink className="w-4 h-4 mr-1" />
                     Live
+                  </Button>
+                )}
+                {project.videoUrl && (
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => window.open(project.videoUrl, '_blank')}
+                    className="flex-1 min-w-0"
+                  >
+                    <Video className="w-4 h-4 mr-1" />
+                    Video
                   </Button>
                 )}
               </div>
