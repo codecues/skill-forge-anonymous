@@ -1,11 +1,10 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
-import { Folder, PlusCircle, ExternalLink, Tag, Image, Video, Code } from 'lucide-react';
+import { Folder, PlusCircle, ExternalLink, Tag, Image, Video, Code, Users } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 
 interface Project {
@@ -20,6 +19,7 @@ interface Project {
   videoUrl?: string;
   type: 'Personal' | 'Academic' | 'Hobby';
   mediaType: 'Software' | 'Video' | 'Design' | 'Research' | 'Other';
+  allowContributions: boolean;
 }
 
 const ProjectManager = () => {
@@ -34,7 +34,8 @@ const ProjectManager = () => {
       githubUrl: 'https://github.com/example/dashboard',
       liveUrl: 'https://dashboard.example.com',
       type: 'Personal',
-      mediaType: 'Software'
+      mediaType: 'Software',
+      allowContributions: false
     },
     {
       id: '2',
@@ -44,7 +45,8 @@ const ProjectManager = () => {
       tags: ['Mobile', 'Weather', 'UI/UX'],
       githubUrl: 'https://github.com/example/weather-app',
       type: 'Hobby',
-      mediaType: 'Software'
+      mediaType: 'Software',
+      allowContributions: false
     },
     {
       id: '3',
@@ -54,7 +56,8 @@ const ProjectManager = () => {
       tags: ['Video Production', 'Marketing', 'Demo'],
       videoUrl: 'https://youtube.com/watch?v=example',
       type: 'Personal',
-      mediaType: 'Video'
+      mediaType: 'Video',
+      allowContributions: false
     }
   ]);
 
@@ -67,7 +70,8 @@ const ProjectManager = () => {
     liveUrl: '',
     videoUrl: '',
     type: 'Personal' as Project['type'],
-    mediaType: 'Software' as Project['mediaType']
+    mediaType: 'Software' as Project['mediaType'],
+    allowContributions: false
   });
 
   const [showForm, setShowForm] = useState(false);
@@ -92,7 +96,8 @@ const ProjectManager = () => {
       liveUrl: newProject.liveUrl || undefined,
       videoUrl: newProject.videoUrl || undefined,
       type: newProject.type,
-      mediaType: newProject.mediaType
+      mediaType: newProject.mediaType,
+      allowContributions: newProject.allowContributions
     };
 
     setProjects([project, ...projects]);
@@ -105,7 +110,8 @@ const ProjectManager = () => {
       liveUrl: '',
       videoUrl: '',
       type: 'Personal',
-      mediaType: 'Software'
+      mediaType: 'Software',
+      allowContributions: false
     });
     setShowForm(false);
     
@@ -262,6 +268,21 @@ const ProjectManager = () => {
               </div>
             </div>
 
+            {/* Contribution Option */}
+            <div className="flex items-center space-x-2 p-4 bg-blue-50 rounded-lg">
+              <input
+                type="checkbox"
+                id="allowContributions"
+                checked={newProject.allowContributions}
+                onChange={(e) => setNewProject({ ...newProject, allowContributions: e.target.checked })}
+                className="rounded"
+              />
+              <label htmlFor="allowContributions" className="text-sm font-medium cursor-pointer flex items-center gap-2">
+                <Users className="w-4 h-4 text-blue-600" />
+                Allow other users to contribute to this project
+              </label>
+            </div>
+
             <div className="flex gap-2">
               <Button onClick={addProject} className="bg-green-500 hover:bg-green-600">
                 Add Project
@@ -282,7 +303,7 @@ const ProjectManager = () => {
               <div className="flex items-start justify-between mb-4">
                 <div>
                   <h3 className="font-semibold text-lg mb-2">{project.title}</h3>
-                  <div className="flex gap-2 mb-2">
+                  <div className="flex gap-2 mb-2 flex-wrap">
                     <Badge className={getTypeColor(project.type)}>
                       {project.type}
                     </Badge>
@@ -290,6 +311,12 @@ const ProjectManager = () => {
                       {getMediaTypeIcon(project.mediaType)}
                       <span className="ml-1">{project.mediaType}</span>
                     </Badge>
+                    {project.allowContributions && (
+                      <Badge className="bg-green-100 text-green-800">
+                        <Users className="w-3 h-3 mr-1" />
+                        Open to Contributors
+                      </Badge>
+                    )}
                   </div>
                 </div>
                 <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center">

@@ -69,7 +69,7 @@ const Index = () => {
   const renderActiveTab = () => {
     switch (activeTab) {
       case 'skills':
-        return <SkillManager />;
+        return <SkillManager certificates={userProfile.certificates} projects={userProfile.projects} />;
       case 'certificates':
         return <CertificateManager />;
       case 'projects':
@@ -79,7 +79,7 @@ const Index = () => {
       case 'feed':
         return <PersonalizedFeed userProfile={userProfile} />;
       default:
-        return <SkillManager />;
+        return <SkillManager certificates={userProfile.certificates} projects={userProfile.projects} />;
     }
   };
 
