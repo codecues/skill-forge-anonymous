@@ -2,25 +2,113 @@
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
-import { PlusCircle, User, Search, BookOpen, Folder, Award } from 'lucide-react';
-import SkillManager from '@/components/SkillManager';
-import CertificateManager from '@/components/CertificateManager';
-import ProjectManager from '@/components/ProjectManager';
-import ProjectExplorer from '@/components/ProjectExplorer';
-import UserProfile from '@/components/UserProfile';
+import { User, Users } from 'lucide-react';
+import CompleteUserProfile from '@/components/CompleteUserProfile';
+import UserList from '@/components/UserList';
+
+// Sample data for multiple users
+const sampleUsers = [
+  {
+    id: '1',
+    alias: 'CodeNinja247',
+    color: 'bg-blue-500',
+    skills: [
+      { id: '1', name: 'React', category: 'Programming', level: 'Advanced' },
+      { id: '2', name: 'Python', category: 'Programming', level: 'Intermediate' },
+      { id: '3', name: 'UI/UX Design', category: 'Design', level: 'Advanced' },
+    ],
+    certificates: [
+      {
+        id: '1',
+        title: 'React Developer Certification',
+        issuer: 'Tech Academy',
+        date: '2024-01-15',
+        description: 'Comprehensive certification covering React fundamentals, hooks, and advanced patterns.',
+        verificationLink: 'https://example.com/verify/123'
+      },
+    ],
+    projects: [
+      {
+        id: '1',
+        title: 'E-commerce Dashboard',
+        description: 'A comprehensive admin dashboard for managing e-commerce operations with real-time analytics.',
+        skills: ['React', 'TypeScript', 'Chart.js'],
+        category: 'Web Development',
+        demoLink: 'https://example.com/demo',
+        githubLink: 'https://github.com/example',
+        imageUrl: '/placeholder.svg'
+      },
+    ]
+  },
+  {
+    id: '2',
+    alias: 'DesignWizard891',
+    color: 'bg-purple-500',
+    skills: [
+      { id: '4', name: 'Figma', category: 'Design', level: 'Expert' },
+      { id: '5', name: 'Adobe Photoshop', category: 'Design', level: 'Advanced' },
+      { id: '6', name: 'Prototyping', category: 'Design', level: 'Advanced' },
+    ],
+    certificates: [
+      {
+        id: '2',
+        title: 'UX Design Professional',
+        issuer: 'Design Institute',
+        date: '2023-11-20',
+        description: 'User experience design principles, prototyping, and user research methodologies.',
+        verificationLink: 'https://example.com/verify/456'
+      },
+    ],
+    projects: [
+      {
+        id: '2',
+        title: 'Mobile Banking App Design',
+        description: 'Complete UI/UX design for a modern mobile banking application with focus on accessibility.',
+        skills: ['Figma', 'User Research', 'Prototyping'],
+        category: 'UI/UX Design',
+        demoLink: 'https://example.com/demo2',
+        githubLink: '',
+        imageUrl: '/placeholder.svg'
+      },
+    ]
+  },
+  {
+    id: '3',
+    alias: 'DataDriven123',
+    color: 'bg-green-500',
+    skills: [
+      { id: '7', name: 'Python', category: 'Programming', level: 'Expert' },
+      { id: '8', name: 'Machine Learning', category: 'Data Science', level: 'Advanced' },
+      { id: '9', name: 'SQL', category: 'Data Science', level: 'Advanced' },
+    ],
+    certificates: [
+      {
+        id: '3',
+        title: 'Data Science Specialist',
+        issuer: 'Data Academy',
+        date: '2024-02-10',
+        description: 'Advanced data science techniques including machine learning and statistical analysis.',
+        verificationLink: 'https://example.com/verify/789'
+      },
+    ],
+    projects: [
+      {
+        id: '3',
+        title: 'Predictive Analytics Platform',
+        description: 'Machine learning platform for predictive analytics with interactive visualizations.',
+        skills: ['Python', 'TensorFlow', 'Pandas'],
+        category: 'Data Science',
+        demoLink: 'https://example.com/demo3',
+        githubLink: 'https://github.com/example3',
+        imageUrl: '/placeholder.svg'
+      },
+    ]
+  }
+];
 
 const Index = () => {
-  const [activeTab, setActiveTab] = useState('overview');
-
-  // Sample data for the overview
-  const stats = {
-    skills: 12,
-    certificates: 3,
-    projects: 5,
-    views: 247
-  };
+  const [selectedUser, setSelectedUser] = useState(sampleUsers[0]);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50">
@@ -33,139 +121,31 @@ const Index = () => {
             </h1>
             <p className="text-gray-600 mt-2">Anonymous Student Portfolio Platform</p>
           </div>
-          <UserProfile />
+          <Card className="border-0 shadow-lg bg-white/80 backdrop-blur">
+            <CardContent className="p-4">
+              <div className="flex items-center gap-2">
+                <Users className="w-5 h-5 text-blue-600" />
+                <span className="font-semibold">{sampleUsers.length} Students</span>
+              </div>
+            </CardContent>
+          </Card>
         </div>
 
-        {/* Navigation Tabs */}
-        <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-          <TabsList className="grid w-full grid-cols-5 mb-8">
-            <TabsTrigger value="overview" className="flex items-center gap-2">
-              <User className="w-4 h-4" />
-              Overview
-            </TabsTrigger>
-            <TabsTrigger value="skills" className="flex items-center gap-2">
-              <BookOpen className="w-4 h-4" />
-              Skills
-            </TabsTrigger>
-            <TabsTrigger value="certificates" className="flex items-center gap-2">
-              <Award className="w-4 h-4" />
-              Certificates
-            </TabsTrigger>
-            <TabsTrigger value="projects" className="flex items-center gap-2">
-              <Folder className="w-4 h-4" />
-              Projects
-            </TabsTrigger>
-            <TabsTrigger value="explore" className="flex items-center gap-2">
-              <Search className="w-4 h-4" />
-              Explore
-            </TabsTrigger>
-          </TabsList>
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
+          {/* User List Sidebar */}
+          <div className="lg:col-span-1">
+            <UserList 
+              users={sampleUsers}
+              onSelectUser={setSelectedUser}
+              selectedUserId={selectedUser.id}
+            />
+          </div>
 
-          {/* Overview Tab */}
-          <TabsContent value="overview" className="space-y-6">
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-              <Card className="bg-gradient-to-br from-blue-500 to-blue-600 text-white">
-                <CardContent className="p-6">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="text-blue-100">Skills</p>
-                      <p className="text-3xl font-bold">{stats.skills}</p>
-                    </div>
-                    <BookOpen className="w-8 h-8 text-blue-200" />
-                  </div>
-                </CardContent>
-              </Card>
-              
-              <Card className="bg-gradient-to-br from-purple-500 to-purple-600 text-white">
-                <CardContent className="p-6">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="text-purple-100">Certificates</p>
-                      <p className="text-3xl font-bold">{stats.certificates}</p>
-                    </div>
-                    <Award className="w-8 h-8 text-purple-200" />
-                  </div>
-                </CardContent>
-              </Card>
-
-              <Card className="bg-gradient-to-br from-green-500 to-green-600 text-white">
-                <CardContent className="p-6">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="text-green-100">Projects</p>
-                      <p className="text-3xl font-bold">{stats.projects}</p>
-                    </div>
-                    <Folder className="w-8 h-8 text-green-200" />
-                  </div>
-                </CardContent>
-              </Card>
-
-              <Card className="bg-gradient-to-br from-orange-500 to-orange-600 text-white">
-                <CardContent className="p-6">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="text-orange-100">Profile Views</p>
-                      <p className="text-3xl font-bold">{stats.views}</p>
-                    </div>
-                    <User className="w-8 h-8 text-orange-200" />
-                  </div>
-                </CardContent>
-              </Card>
-            </div>
-
-            {/* Quick Actions */}
-            <Card>
-              <CardHeader>
-                <CardTitle>Quick Actions</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                  <Button 
-                    onClick={() => setActiveTab('skills')}
-                    className="h-20 flex flex-col gap-2 bg-blue-500 hover:bg-blue-600"
-                  >
-                    <PlusCircle className="w-6 h-6" />
-                    Add New Skill
-                  </Button>
-                  <Button 
-                    onClick={() => setActiveTab('certificates')}
-                    className="h-20 flex flex-col gap-2 bg-purple-500 hover:bg-purple-600"
-                  >
-                    <Award className="w-6 h-6" />
-                    Add Certificate
-                  </Button>
-                  <Button 
-                    onClick={() => setActiveTab('projects')}
-                    className="h-20 flex flex-col gap-2 bg-green-500 hover:bg-green-600"
-                  >
-                    <Folder className="w-6 h-6" />
-                    Create Project
-                  </Button>
-                </div>
-              </CardContent>
-            </Card>
-          </TabsContent>
-
-          {/* Skills Tab */}
-          <TabsContent value="skills">
-            <SkillManager />
-          </TabsContent>
-
-          {/* Certificates Tab */}
-          <TabsContent value="certificates">
-            <CertificateManager />
-          </TabsContent>
-
-          {/* Projects Tab */}
-          <TabsContent value="projects">
-            <ProjectManager />
-          </TabsContent>
-
-          {/* Explore Tab */}
-          <TabsContent value="explore">
-            <ProjectExplorer />
-          </TabsContent>
-        </Tabs>
+          {/* Selected User Profile */}
+          <div className="lg:col-span-3">
+            <CompleteUserProfile user={selectedUser} />
+          </div>
+        </div>
       </div>
     </div>
   );
