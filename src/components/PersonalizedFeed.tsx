@@ -1,4 +1,3 @@
-
 import React, { useState, useMemo } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -19,7 +18,7 @@ interface PersonalizedFeedProps {
 
 const PersonalizedFeed = ({ userProfile }: PersonalizedFeedProps) => {
   const [relevanceFilter, setRelevanceFilter] = useState('all');
-  const [categoryFilter, setCategoryFilter] = useState('');
+  const [categoryFilter, setCategoryFilter] = useState('all');
 
   // Sample projects from other users that would be fetched from backend
   const allProjects = [
@@ -125,7 +124,7 @@ const PersonalizedFeed = ({ userProfile }: PersonalizedFeedProps) => {
     }
 
     // Filter by category
-    if (categoryFilter) {
+    if (categoryFilter !== 'all') {
       filtered = filtered.filter(project => project.category === categoryFilter);
     }
 
@@ -204,7 +203,7 @@ const PersonalizedFeed = ({ userProfile }: PersonalizedFeedProps) => {
                 <SelectValue placeholder="Category" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="">All Categories</SelectItem>
+                <SelectItem value="all">All Categories</SelectItem>
                 {categories.map((category) => (
                   <SelectItem key={category} value={category}>
                     {category}
@@ -217,7 +216,7 @@ const PersonalizedFeed = ({ userProfile }: PersonalizedFeedProps) => {
               variant="outline"
               onClick={() => {
                 setRelevanceFilter('all');
-                setCategoryFilter('');
+                setCategoryFilter('all');
               }}
             >
               Clear
@@ -350,7 +349,7 @@ const PersonalizedFeed = ({ userProfile }: PersonalizedFeedProps) => {
               variant="outline"
               onClick={() => {
                 setRelevanceFilter('all');
-                setCategoryFilter('');
+                setCategoryFilter('all');
               }}
             >
               Clear All Filters
