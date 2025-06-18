@@ -1,4 +1,3 @@
-
 import React, { useState, useMemo } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -397,158 +396,159 @@ const PersonalizedFeed = ({ userProfile }: PersonalizedFeedProps) => {
         </CardContent>
       </Card>
 
-      {/* Feed Items Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      {/* Feed Items List View */}
+      <div className="space-y-4">
         {filteredItems.map((item) => (
           <Card key={item.id} className="hover:shadow-lg transition-shadow border-l-4 border-l-blue-500">
             <CardContent className="p-6">
-              {/* Author and Relevance */}
-              <div className="flex items-center justify-between mb-4">
-                <div className="flex items-center gap-3">
-                  <div className={`w-8 h-8 rounded-full ${item.authorColor} flex items-center justify-center`}>
-                    <User className="w-4 h-4 text-white" />
+              <div className="flex flex-col md:flex-row gap-6">
+                {/* Left side - Author info and icon */}
+                <div className="flex items-start gap-3 md:w-48 flex-shrink-0">
+                  <div className={`w-12 h-12 rounded-full ${item.authorColor} flex items-center justify-center`}>
+                    <User className="w-6 h-6 text-white" />
                   </div>
-                  <div>
+                  <div className="flex-1">
                     <p className="font-medium text-sm">{item.author}</p>
-                    <div className="flex items-center gap-2 text-xs text-gray-500">
+                    <div className="flex items-center gap-2 text-xs text-gray-500 mb-2">
                       <Eye className="w-3 h-3" />
                       {item.views} views
                     </div>
-                  </div>
-                </div>
-                <div className="flex flex-col gap-1">
-                  <Badge className={getRelevanceBadgeColor(item.calculatedRelevance)}>
-                    {Math.round(item.calculatedRelevance)}% match
-                  </Badge>
-                  <Badge className={getTypeColor(item.type)}>
-                    {getTypeIcon(item.type, item.mediaType)}
-                    <span className="ml-1 capitalize">{item.type}</span>
-                  </Badge>
-                </div>
-              </div>
-
-              {/* Item Details */}
-              <h3 className="font-semibold text-lg mb-2">{item.title}</h3>
-              <p className="text-gray-700 text-sm leading-relaxed mb-4 line-clamp-3">
-                {item.description}
-              </p>
-
-              {/* Certificate specific info */}
-              {item.type === 'certificate' && (item.issuer || item.date) && (
-                <div className="mb-3 p-2 bg-yellow-50 rounded">
-                  {item.issuer && <p className="text-xs font-medium text-yellow-800">Issued by: {item.issuer}</p>}
-                  {item.date && <p className="text-xs text-yellow-700">Date: {new Date(item.date).toLocaleDateString()}</p>}
-                </div>
-              )}
-
-              {/* Matching Skills */}
-              {item.matchingSkills.length > 0 && (
-                <div className="mb-3">
-                  <p className="text-xs font-medium text-green-600 mb-1">YOUR SKILLS:</p>
-                  <div className="flex flex-wrap gap-1">
-                    {item.matchingSkills.map((skill, index) => (
-                      <Badge key={index} className="bg-green-100 text-green-800">
-                        {skill}
+                    <div className="flex flex-col gap-1">
+                      <Badge className={getRelevanceBadgeColor(item.calculatedRelevance)}>
+                        {Math.round(item.calculatedRelevance)}% match
                       </Badge>
-                    ))}
+                      <Badge className={getTypeColor(item.type)}>
+                        {getTypeIcon(item.type, item.mediaType)}
+                        <span className="ml-1 capitalize">{item.type}</span>
+                      </Badge>
+                    </div>
                   </div>
                 </div>
-              )}
 
-              {/* All Skills */}
-              <div className="mb-4">
-                <p className="text-xs font-medium text-gray-500 mb-2">ALL SKILLS:</p>
-                <div className="flex flex-wrap gap-1">
-                  {item.skills.slice(0, 4).map((skill, index) => (
-                    <Badge 
-                      key={index} 
-                      variant="outline" 
-                      className={`text-xs ${
-                        item.matchingSkills.includes(skill) 
-                          ? 'border-green-500 text-green-700' 
-                          : ''
-                      }`}
-                    >
-                      {skill}
-                    </Badge>
-                  ))}
-                  {item.skills.length > 4 && (
-                    <Badge variant="outline" className="text-xs">
-                      +{item.skills.length - 4} more
-                    </Badge>
+                {/* Right side - Content */}
+                <div className="flex-1">
+                  <h3 className="font-semibold text-lg mb-2">{item.title}</h3>
+                  <p className="text-gray-700 text-sm leading-relaxed mb-4">
+                    {item.description}
+                  </p>
+
+                  {/* Certificate specific info */}
+                  {item.type === 'certificate' && (item.issuer || item.date) && (
+                    <div className="mb-3 p-2 bg-yellow-50 rounded">
+                      {item.issuer && <p className="text-xs font-medium text-yellow-800">Issued by: {item.issuer}</p>}
+                      {item.date && <p className="text-xs text-yellow-700">Date: {new Date(item.date).toLocaleDateString()}</p>}
+                    </div>
                   )}
+
+                  {/* Skills and Tags in horizontal layout */}
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                    {/* Matching Skills */}
+                    {item.matchingSkills.length > 0 && (
+                      <div>
+                        <p className="text-xs font-medium text-green-600 mb-1">YOUR SKILLS:</p>
+                        <div className="flex flex-wrap gap-1">
+                          {item.matchingSkills.map((skill, index) => (
+                            <Badge key={index} className="bg-green-100 text-green-800 text-xs">
+                              {skill}
+                            </Badge>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+
+                    {/* All Skills */}
+                    <div>
+                      <p className="text-xs font-medium text-gray-500 mb-1">ALL SKILLS:</p>
+                      <div className="flex flex-wrap gap-1">
+                        {item.skills.slice(0, 4).map((skill, index) => (
+                          <Badge 
+                            key={index} 
+                            variant="outline" 
+                            className={`text-xs ${
+                              item.matchingSkills.includes(skill) 
+                                ? 'border-green-500 text-green-700' 
+                                : ''
+                            }`}
+                          >
+                            {skill}
+                          </Badge>
+                        ))}
+                        {item.skills.length > 4 && (
+                          <Badge variant="outline" className="text-xs">
+                            +{item.skills.length - 4} more
+                          </Badge>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Tags */}
+                  <div className="mb-4">
+                    <div className="flex flex-wrap gap-1">
+                      {item.tags.map((tag, index) => (
+                        <Badge key={index} variant="secondary" className="text-xs">
+                          <Tag className="w-3 h-3 mr-1" />
+                          {tag}
+                        </Badge>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Links and Actions */}
+                  <div className="flex flex-wrap gap-2">
+                    {item.githubUrl && (
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => window.open(item.githubUrl, '_blank')}
+                      >
+                        <Code className="w-4 h-4 mr-1" />
+                        Code
+                      </Button>
+                    )}
+                    {item.liveUrl && (
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => window.open(item.liveUrl, '_blank')}
+                      >
+                        <ExternalLink className="w-4 h-4 mr-1" />
+                        Demo
+                      </Button>
+                    )}
+                    {item.videoUrl && (
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => window.open(item.videoUrl, '_blank')}
+                      >
+                        <Video className="w-4 h-4 mr-1" />
+                        Video
+                      </Button>
+                    )}
+                    {item.verificationUrl && (
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => window.open(item.verificationUrl, '_blank')}
+                      >
+                        <Award className="w-4 h-4 mr-1" />
+                        Verify
+                      </Button>
+                    )}
+
+                    {/* Project Contribution Option */}
+                    {item.type === 'project' && item.allowContributions && (
+                      <Button
+                        size="sm"
+                        className="bg-green-500 hover:bg-green-600 text-white"
+                      >
+                        Request to Contribute
+                      </Button>
+                    )}
+                  </div>
                 </div>
               </div>
-
-              {/* Tags */}
-              <div className="mb-4">
-                <div className="flex flex-wrap gap-1">
-                  {item.tags.map((tag, index) => (
-                    <Badge key={index} variant="secondary" className="text-xs">
-                      <Tag className="w-3 h-3 mr-1" />
-                      {tag}
-                    </Badge>
-                  ))}
-                </div>
-              </div>
-
-              {/* Links */}
-              <div className="flex flex-wrap gap-2">
-                {item.githubUrl && (
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => window.open(item.githubUrl, '_blank')}
-                    className="flex-1 min-w-0"
-                  >
-                    <Code className="w-4 h-4 mr-1" />
-                    Code
-                  </Button>
-                )}
-                {item.liveUrl && (
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => window.open(item.liveUrl, '_blank')}
-                    className="flex-1 min-w-0"
-                  >
-                    <ExternalLink className="w-4 h-4 mr-1" />
-                    Demo
-                  </Button>
-                )}
-                {item.videoUrl && (
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => window.open(item.videoUrl, '_blank')}
-                    className="flex-1 min-w-0"
-                  >
-                    <Video className="w-4 h-4 mr-1" />
-                    Video
-                  </Button>
-                )}
-                {item.verificationUrl && (
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => window.open(item.verificationUrl, '_blank')}
-                    className="flex-1 min-w-0"
-                  >
-                    <Award className="w-4 h-4 mr-1" />
-                    Verify
-                  </Button>
-                )}
-              </div>
-
-              {/* Project Contribution Option */}
-              {item.type === 'project' && item.allowContributions && (
-                <div className="mt-4 p-2 bg-green-50 rounded border border-green-200">
-                  <p className="text-xs text-green-700 mb-2">🤝 Open for contributions</p>
-                  <Button size="sm" variant="outline" className="w-full text-green-700 border-green-300">
-                    Request to Contribute
-                  </Button>
-                </div>
-              )}
             </CardContent>
           </Card>
         ))}

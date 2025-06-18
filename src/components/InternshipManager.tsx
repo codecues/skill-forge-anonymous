@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -225,57 +224,63 @@ const InternshipManager = () => {
         </Card>
       )}
 
-      {/* Internships Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      {/* Internships List View */}
+      <div className="space-y-4">
         {internships.map((internship) => (
           <Card key={internship.id} className="border-l-4 border-l-purple-500 hover:shadow-lg transition-shadow">
             <CardContent className="p-6">
-              <div className="flex items-start justify-between mb-4">
-                <div className="flex-1">
-                  <h3 className="font-semibold text-lg mb-1">{internship.position}</h3>
-                  <div className="flex items-center gap-2 text-gray-600 mb-2">
-                    <Building className="w-4 h-4" />
-                    <span className="text-sm">{internship.company}</span>
+              <div className="flex flex-col md:flex-row gap-6">
+                {/* Left side - Company icon and basic info */}
+                <div className="flex items-start gap-3 md:w-64 flex-shrink-0">
+                  <div className="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center">
+                    <Briefcase className="w-6 h-6 text-purple-600" />
                   </div>
-                  <Badge className={getTypeColor(internship.type)}>
-                    <MapPin className="w-3 h-3 mr-1" />
-                    {internship.type}
-                  </Badge>
+                  <div className="flex-1">
+                    <h3 className="font-semibold text-lg mb-1">{internship.position}</h3>
+                    <div className="flex items-center gap-2 text-gray-600 mb-2">
+                      <Building className="w-4 h-4" />
+                      <span className="text-sm">{internship.company}</span>
+                    </div>
+                    <Badge className={getTypeColor(internship.type)}>
+                      <MapPin className="w-3 h-3 mr-1" />
+                      {internship.type}
+                    </Badge>
+                  </div>
                 </div>
-                <div className="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center">
-                  <Briefcase className="w-6 h-6 text-purple-600" />
+
+                {/* Right side - Details */}
+                <div className="flex-1">
+                  {/* Duration */}
+                  {(internship.duration || internship.startDate) && (
+                    <div className="flex items-center gap-2 text-sm text-gray-600 mb-3">
+                      <Calendar className="w-4 h-4" />
+                      <span>
+                        {internship.duration && `${internship.duration}`}
+                        {internship.startDate && ` • ${new Date(internship.startDate).toLocaleDateString()}`}
+                        {internship.endDate && ` - ${new Date(internship.endDate).toLocaleDateString()}`}
+                      </span>
+                    </div>
+                  )}
+
+                  <p className="text-gray-700 text-sm leading-relaxed mb-4">
+                    {internship.description}
+                  </p>
+
+                  {/* Skills */}
+                  {internship.skills.length > 0 && (
+                    <div>
+                      <p className="text-xs font-medium text-gray-500 mb-2">SKILLS GAINED</p>
+                      <div className="flex flex-wrap gap-1">
+                        {internship.skills.map((skill, index) => (
+                          <Badge key={index} variant="outline" className="text-xs">
+                            {skill}
+                          </Badge>
+                        ))}
+                      </div>
+                    </div>
+                  )}
                 </div>
               </div>
-
-              {/* Duration */}
-              {(internship.duration || internship.startDate) && (
-                <div className="flex items-center gap-2 text-sm text-gray-600 mb-3">
-                  <Calendar className="w-4 h-4" />
-                  <span>
-                    {internship.duration && `${internship.duration}`}
-                    {internship.startDate && ` • ${new Date(internship.startDate).toLocaleDateString()}`}
-                    {internship.endDate && ` - ${new Date(internship.endDate).toLocaleDateString()}`}
-                  </span>
-                </div>
-              )}
-
-              <p className="text-gray-700 text-sm leading-relaxed mb-4 line-clamp-3">
-                {internship.description}
-              </p>
-
-              {/* Skills */}
-              {internship.skills.length > 0 && (
-                <div className="mb-4">
-                  <p className="text-xs font-medium text-gray-500 mb-2">SKILLS GAINED</p>
-                  <div className="flex flex-wrap gap-1">
-                    {internship.skills.map((skill, index) => (
-                      <Badge key={index} variant="outline" className="text-xs">
-                        {skill}
-                      </Badge>
-                    ))}
-                  </div>
-                </div>
-              )}
             </CardContent>
           </Card>
         ))}

@@ -295,103 +295,109 @@ const ProjectManager = () => {
         </Card>
       )}
 
-      {/* Projects Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      {/* Projects List View */}
+      <div className="space-y-4">
         {projects.map((project) => (
           <Card key={project.id} className="border-l-4 border-l-green-500 hover:shadow-lg transition-shadow">
             <CardContent className="p-6">
-              <div className="flex items-start justify-between mb-4">
-                <div>
-                  <h3 className="font-semibold text-lg mb-2">{project.title}</h3>
-                  <div className="flex gap-2 mb-2 flex-wrap">
-                    <Badge className={getTypeColor(project.type)}>
-                      {project.type}
-                    </Badge>
-                    <Badge className={getMediaTypeColor(project.mediaType)}>
-                      {getMediaTypeIcon(project.mediaType)}
-                      <span className="ml-1">{project.mediaType}</span>
-                    </Badge>
-                    {project.allowContributions && (
-                      <Badge className="bg-green-100 text-green-800">
-                        <Users className="w-3 h-3 mr-1" />
-                        Open to Contributors
+              <div className="flex flex-col md:flex-row gap-6">
+                {/* Left side - Project icon and basic info */}
+                <div className="flex items-start gap-3 md:w-64 flex-shrink-0">
+                  <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center">
+                    {getMediaTypeIcon(project.mediaType)}
+                  </div>
+                  <div className="flex-1">
+                    <h3 className="font-semibold text-lg mb-2">{project.title}</h3>
+                    <div className="flex flex-col gap-1 mb-2">
+                      <Badge className={getTypeColor(project.type)}>
+                        {project.type}
                       </Badge>
+                      <Badge className={getMediaTypeColor(project.mediaType)}>
+                        {getMediaTypeIcon(project.mediaType)}
+                        <span className="ml-1">{project.mediaType}</span>
+                      </Badge>
+                      {project.allowContributions && (
+                        <Badge className="bg-green-100 text-green-800">
+                          <Users className="w-3 h-3 mr-1" />
+                          Open to Contributors
+                        </Badge>
+                      )}
+                    </div>
+                  </div>
+                </div>
+
+                {/* Right side - Details */}
+                <div className="flex-1">
+                  <p className="text-gray-700 text-sm leading-relaxed mb-4">
+                    {project.description}
+                  </p>
+
+                  {/* Skills and Tags in horizontal layout */}
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                    {/* Skills */}
+                    {project.skills.length > 0 && (
+                      <div>
+                        <p className="text-xs font-medium text-gray-500 mb-2">SKILLS USED</p>
+                        <div className="flex flex-wrap gap-1">
+                          {project.skills.map((skill, index) => (
+                            <Badge key={index} variant="outline" className="text-xs">
+                              {skill}
+                            </Badge>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Tags */}
+                    {project.tags.length > 0 && (
+                      <div>
+                        <p className="text-xs font-medium text-gray-500 mb-2">TAGS</p>
+                        <div className="flex flex-wrap gap-1">
+                          {project.tags.map((tag, index) => (
+                            <Badge key={index} variant="secondary" className="text-xs">
+                              <Tag className="w-3 h-3 mr-1" />
+                              {tag}
+                            </Badge>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Links */}
+                  <div className="flex flex-wrap gap-2">
+                    {project.githubUrl && (
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => window.open(project.githubUrl, '_blank')}
+                      >
+                        <Code className="w-4 h-4 mr-1" />
+                        Code
+                      </Button>
+                    )}
+                    {project.liveUrl && (
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => window.open(project.liveUrl, '_blank')}
+                      >
+                        <ExternalLink className="w-4 h-4 mr-1" />
+                        Live
+                      </Button>
+                    )}
+                    {project.videoUrl && (
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => window.open(project.videoUrl, '_blank')}
+                      >
+                        <Video className="w-4 h-4 mr-1" />
+                        Video
+                      </Button>
                     )}
                   </div>
                 </div>
-                <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center">
-                  {getMediaTypeIcon(project.mediaType)}
-                </div>
-              </div>
-
-              <p className="text-gray-700 text-sm leading-relaxed mb-4 line-clamp-3">
-                {project.description}
-              </p>
-
-              {/* Skills */}
-              {project.skills.length > 0 && (
-                <div className="mb-4">
-                  <p className="text-xs font-medium text-gray-500 mb-2">SKILLS USED</p>
-                  <div className="flex flex-wrap gap-1">
-                    {project.skills.map((skill, index) => (
-                      <Badge key={index} variant="outline" className="text-xs">
-                        {skill}
-                      </Badge>
-                    ))}
-                  </div>
-                </div>
-              )}
-
-              {/* Tags */}
-              {project.tags.length > 0 && (
-                <div className="mb-4">
-                  <p className="text-xs font-medium text-gray-500 mb-2">TAGS</p>
-                  <div className="flex flex-wrap gap-1">
-                    {project.tags.map((tag, index) => (
-                      <Badge key={index} variant="secondary" className="text-xs">
-                        <Tag className="w-3 h-3 mr-1" />
-                        {tag}
-                      </Badge>
-                    ))}
-                  </div>
-                </div>
-              )}
-
-              {/* Links */}
-              <div className="flex flex-wrap gap-2 mt-4">
-                {project.githubUrl && (
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => window.open(project.githubUrl, '_blank')}
-                    className="flex-1 min-w-0"
-                  >
-                    <Code className="w-4 h-4 mr-1" />
-                    Code
-                  </Button>
-                )}
-                {project.liveUrl && (
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => window.open(project.liveUrl, '_blank')}
-                    className="flex-1 min-w-0"
-                  >
-                    <ExternalLink className="w-4 h-4 mr-1" />
-                    Live
-                  </Button>
-                )}
-                {project.videoUrl && (
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => window.open(project.videoUrl, '_blank')}
-                    className="flex-1 min-w-0"
-                  >
-                    <Video className="w-4 h-4 mr-1" />
-                    Video
-                  </Button>
-                )}
               </div>
             </CardContent>
           </Card>
