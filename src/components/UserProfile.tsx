@@ -24,9 +24,38 @@ const UserProfile = ({ userProfile }: UserProfileProps) => {
   };
 
   const handleResumeExport = () => {
-    // Placeholder for resume export functionality
-    console.log('Exporting resume...');
-    // TODO: Implement actual resume export logic
+    console.log('Generating resume...');
+    
+    // Create a simple resume content
+    const resumeContent = `
+RESUME - ${userProfile.alias}
+
+Profile Information:
+- Alias: ${userProfile.alias}
+${userProfile.branch ? `- Branch: ${userProfile.branch}` : ''}
+- SkillSync Score: ${userProfile.profileScore}%
+
+This is a placeholder resume. In a real application, this would:
+- Compile data from skills, projects, certificates, internships, and hackathons
+- Format it professionally
+- Generate a downloadable PDF
+- Include all portfolio achievements
+
+Generated on: ${new Date().toLocaleDateString()}
+    `.trim();
+
+    // Create and download the file
+    const blob = new Blob([resumeContent], { type: 'text/plain' });
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `${userProfile.alias}_Resume.txt`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    window.URL.revokeObjectURL(url);
+    
+    console.log('Resume exported successfully!');
   };
 
   return (

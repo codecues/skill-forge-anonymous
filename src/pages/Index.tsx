@@ -1,9 +1,8 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { User, BookOpen, Award, Folder, Sparkles, Briefcase, Users, FileText, Calendar, Heart, GraduationCap } from 'lucide-react';
+import { User, BookOpen, Award, Folder, Sparkles, Briefcase, Users, FileText, Calendar, Heart, GraduationCap, Code } from 'lucide-react';
 import SkillManager from '@/components/SkillManager';
 import CertificateManager from '@/components/CertificateManager';
 import ProjectManager from '@/components/ProjectManager';
@@ -14,6 +13,7 @@ import EventManager from '@/components/EventManager';
 import MentorManager from '@/components/MentorManager';
 import AppreciationManager from '@/components/AppreciationManager';
 import UserProfile from '@/components/UserProfile';
+import HackathonManager from '@/components/HackathonManager';
 
 const Index = () => {
   const [activeTab, setActiveTab] = useState('feed');
@@ -78,6 +78,7 @@ const Index = () => {
     { id: 'certificates', label: 'Certificates', icon: Award },
     { id: 'projects', label: 'Projects', icon: Folder },
     { id: 'internships', label: 'Internships', icon: Briefcase },
+    { id: 'hackathons', label: 'Hackathons', icon: Code },
     { id: 'blogs', label: 'Blogs', icon: FileText },
     { id: 'events', label: 'Events', icon: Calendar },
     { id: 'mentors', label: 'Mentors', icon: Users },
@@ -96,6 +97,8 @@ const Index = () => {
         return <ProjectManager />;
       case 'internships':
         return <InternshipManager />;
+      case 'hackathons':
+        return <HackathonManager />;
       case 'blogs':
         return <BlogManager />;
       case 'events':
