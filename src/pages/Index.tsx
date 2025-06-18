@@ -3,19 +3,27 @@ import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { User, BookOpen, Award, Folder, Sparkles, Briefcase } from 'lucide-react';
+import { User, BookOpen, Award, Folder, Sparkles, Briefcase, Users, FileText, Calendar, Heart, GraduationCap } from 'lucide-react';
 import SkillManager from '@/components/SkillManager';
 import CertificateManager from '@/components/CertificateManager';
 import ProjectManager from '@/components/ProjectManager';
 import InternshipManager from '@/components/InternshipManager';
 import PersonalizedFeed from '@/components/PersonalizedFeed';
+import BlogManager from '@/components/BlogManager';
+import EventManager from '@/components/EventManager';
+import MentorManager from '@/components/MentorManager';
+import AppreciationManager from '@/components/AppreciationManager';
+import UserProfile from '@/components/UserProfile';
 
 const Index = () => {
-  const [activeTab, setActiveTab] = useState('skills');
+  const [activeTab, setActiveTab] = useState('feed');
   
-  // Sample user profile data - this would typically come from user input
+  // Sample user profile data with masked names
   const [userProfile, setUserProfile] = useState({
-    alias: 'MyProfile',
+    alias: 'TechExplorer42',
+    realName: 'CodeNinja2024', // This is also masked
+    branch: 'Computer Science Engineering',
+    profileScore: 78,
     skills: [
       { id: '1', name: 'React', category: 'Programming', level: 'Advanced' },
       { id: '2', name: 'Python', category: 'Programming', level: 'Intermediate' },
@@ -28,7 +36,8 @@ const Index = () => {
         issuer: 'Tech Academy',
         date: '2024-01-15',
         description: 'Comprehensive certification covering React fundamentals, hooks, and advanced patterns.',
-        verificationLink: 'https://example.com/verify/123'
+        verificationLink: 'https://example.com/verify/123',
+        skills: ['React', 'JavaScript', 'TypeScript']
       },
     ],
     projects: [
@@ -40,13 +49,14 @@ const Index = () => {
         category: 'Web Development',
         demoLink: 'https://example.com/demo',
         githubLink: 'https://github.com/example',
-        imageUrl: '/placeholder.svg'
+        imageUrl: '/placeholder.svg',
+        allowContributions: true
       },
     ],
     internships: [
       {
         id: '1',
-        company: 'Tech Innovations Inc.',
+        company: 'TechCorp Solutions',
         position: 'Frontend Developer Intern',
         duration: '3 months',
         startDate: '2024-06-01',
@@ -55,31 +65,47 @@ const Index = () => {
         skills: ['React', 'JavaScript', 'CSS'],
         type: 'Remote'
       },
-    ]
+    ],
+    blogs: [],
+    events: [],
+    mentors: [],
+    appreciations: []
   });
 
   const tabs = [
+    { id: 'feed', label: 'Discover', icon: Sparkles },
     { id: 'skills', label: 'Skills', icon: BookOpen },
     { id: 'certificates', label: 'Certificates', icon: Award },
     { id: 'projects', label: 'Projects', icon: Folder },
     { id: 'internships', label: 'Internships', icon: Briefcase },
-    { id: 'feed', label: 'Discover', icon: Sparkles },
+    { id: 'blogs', label: 'Blogs', icon: FileText },
+    { id: 'events', label: 'Events', icon: Calendar },
+    { id: 'mentors', label: 'Mentors', icon: Users },
+    { id: 'appreciations', label: 'Appreciations', icon: Heart },
   ];
 
   const renderActiveTab = () => {
     switch (activeTab) {
+      case 'feed':
+        return <PersonalizedFeed userProfile={userProfile} />;
       case 'skills':
-        return <SkillManager certificates={userProfile.certificates} projects={userProfile.projects} />;
+        return <SkillManager certificates={userProfile.certificates} projects={userProfile.projects} internships={userProfile.internships} />;
       case 'certificates':
         return <CertificateManager />;
       case 'projects':
         return <ProjectManager />;
       case 'internships':
         return <InternshipManager />;
-      case 'feed':
-        return <PersonalizedFeed userProfile={userProfile} />;
+      case 'blogs':
+        return <BlogManager />;
+      case 'events':
+        return <EventManager />;
+      case 'mentors':
+        return <MentorManager />;
+      case 'appreciations':
+        return <AppreciationManager />;
       default:
-        return <SkillManager certificates={userProfile.certificates} projects={userProfile.projects} />;
+        return <PersonalizedFeed userProfile={userProfile} />;
     }
   };
 
@@ -94,14 +120,7 @@ const Index = () => {
             </h1>
             <p className="text-gray-600 mt-2">Build Your Portfolio & Discover Relevant Projects</p>
           </div>
-          <Card className="border-0 shadow-lg bg-white/80 backdrop-blur">
-            <CardContent className="p-4">
-              <div className="flex items-center gap-2">
-                <User className="w-5 h-5 text-blue-600" />
-                <span className="font-semibold">Anonymous Profile</span>
-              </div>
-            </CardContent>
-          </Card>
+          <UserProfile userProfile={userProfile} />
         </div>
 
         {/* Navigation Tabs */}

@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -9,19 +8,20 @@ interface Skill {
   name: string;
   category: string;
   level: string;
-  source: 'certificate' | 'project';
+  source: 'certificate' | 'project' | 'internship';
   sourceTitle: string;
 }
 
 interface SkillManagerProps {
   certificates?: Array<{ title: string; skills?: string[] }>;
   projects?: Array<{ title: string; skills: string[] }>;
+  internships?: Array<{ company: string; skills: string[] }>;
 }
 
-const SkillManager = ({ certificates = [], projects = [] }: SkillManagerProps) => {
+const SkillManager = ({ certificates = [], projects = [], internships = [] }: SkillManagerProps) => {
   const [skills, setSkills] = useState<Skill[]>([]);
 
-  // Auto-populate skills from certificates and projects
+  // Auto-populate skills from certificates, projects, and internships
   useEffect(() => {
     const autoSkills: Skill[] = [];
     
@@ -59,8 +59,24 @@ const SkillManager = ({ certificates = [], projects = [] }: SkillManagerProps) =
       });
     });
 
+    // Extract skills from internships
+    internships.forEach(internship => {
+      internship.skills.forEach(skillName => {
+        if (!autoSkills.find(s => s.name.toLowerCase() === skillName.toLowerCase())) {
+          autoSkills.push({
+            id: `intern-${Date.now()}-${skillName}`,
+            name: skillName,
+            category: getCategoryFromSkill(skillName),
+            level: 'Intermediate',
+            source: 'internship',
+            sourceTitle: internship.company
+          });
+        }
+      });
+    });
+
     setSkills(autoSkills);
-  }, [certificates, projects]);
+  }, [certificates, projects, internships]);
 
   const getCategoryFromSkill = (skillName: string): string => {
     const skill = skillName.toLowerCase();
@@ -128,7 +144,12 @@ const SkillManager = ({ certificates = [], projects = [] }: SkillManagerProps) =
   };
 
   const getSourceColor = (source: string) => {
-    return source === 'certificate' ? 'bg-yellow-50 text-yellow-700' : 'bg-blue-50 text-blue-700';
+    const colors = {
+      'certificate': 'bg-yellow-50 text-yellow-700',
+      'project': 'bg-blue-50 text-blue-700',
+      'internship': 'bg-green-50 text-green-700'
+    };
+    return colors[source] || colors['project'];
   };
 
   return (
@@ -141,8 +162,8 @@ const SkillManager = ({ certificates = [], projects = [] }: SkillManagerProps) =
             <span className="font-semibold text-blue-800">Auto-Generated Skills</span>
           </div>
           <p className="text-blue-700 text-sm">
-            Your skills are automatically extracted from your certificates and projects. 
-            Add more projects and certificates to expand your skill set!
+            Your skills are automatically extracted from your certificates, projects, and internships. 
+            Add more content to expand your skill set!
           </p>
         </CardContent>
       </Card>
@@ -185,7 +206,7 @@ const SkillManager = ({ certificates = [], projects = [] }: SkillManagerProps) =
             <div className="text-center py-8 text-gray-500">
               <BookOpen className="w-12 h-12 mx-auto mb-4 text-gray-300" />
               <p className="mb-2">No skills detected yet.</p>
-              <p className="text-sm">Add certificates and projects to automatically populate your skills!</p>
+              <p className="text-sm">Add certificates, projects, and internships to automatically populate your skills!</p>
             </div>
           )}
         </CardContent>
