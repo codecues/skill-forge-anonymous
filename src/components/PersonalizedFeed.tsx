@@ -1,3 +1,4 @@
+
 import React, { useState, useMemo } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -398,7 +399,7 @@ const PersonalizedFeed = ({ userProfile }: PersonalizedFeedProps) => {
 
       {/* Feed Items Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {allFeedItems.map((item) => (
+        {filteredItems.map((item) => (
           <Card key={item.id} className="hover:shadow-lg transition-shadow border-l-4 border-l-blue-500">
             <CardContent className="p-6">
               {/* Author and Relevance */}
