@@ -111,44 +111,52 @@ const Index = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50">
-      <div className="container mx-auto px-4 py-8">
-        {/* Header */}
-        <div className="flex items-center justify-between mb-8">
-          <div>
-            <h1 className="text-4xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+      <div className="flex">
+        {/* Left Sidebar with Navigation */}
+        <div className="w-64 min-h-screen bg-white shadow-lg border-r">
+          {/* Header */}
+          <div className="p-6 border-b">
+            <h1 className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
               SkillSync
             </h1>
-            <p className="text-gray-600 mt-2">Build Your Portfolio & Discover Relevant Projects</p>
+            <p className="text-gray-600 text-sm mt-1">Build Your Portfolio</p>
           </div>
-          <UserProfile userProfile={userProfile} />
-        </div>
 
-        {/* Navigation Tabs */}
-        <Card className="mb-8">
-          <CardContent className="p-0">
-            <div className="flex overflow-x-auto">
+          {/* User Profile */}
+          <div className="p-4 border-b">
+            <UserProfile userProfile={userProfile} />
+          </div>
+
+          {/* Navigation Tabs */}
+          <div className="p-4">
+            <nav className="space-y-2">
               {tabs.map((tab) => (
                 <Button
                   key={tab.id}
                   variant={activeTab === tab.id ? "default" : "ghost"}
-                  className={`flex-shrink-0 rounded-none border-b-2 transition-colors ${
+                  className={`w-full justify-start transition-colors ${
                     activeTab === tab.id 
-                      ? 'border-blue-500 bg-blue-50 text-blue-600' 
-                      : 'border-transparent hover:bg-gray-50 hover:text-gray-900'
+                      ? 'bg-blue-500 text-white hover:bg-blue-600' 
+                      : 'hover:bg-gray-100 text-gray-700'
                   }`}
                   onClick={() => setActiveTab(tab.id)}
                 >
-                  <tab.icon className="w-4 h-4 mr-2" />
+                  <tab.icon className="w-4 h-4 mr-3" />
                   {tab.label}
                 </Button>
               ))}
-            </div>
-          </CardContent>
-        </Card>
+            </nav>
+          </div>
+        </div>
 
-        {/* Active Tab Content */}
-        <div className="space-y-6">
-          {renderActiveTab()}
+        {/* Main Content Area */}
+        <div className="flex-1">
+          <div className="container mx-auto px-8 py-8">
+            {/* Active Tab Content */}
+            <div className="space-y-6">
+              {renderActiveTab()}
+            </div>
+          </div>
         </div>
       </div>
     </div>
