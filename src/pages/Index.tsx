@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -113,34 +114,34 @@ const Index = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50">
+    <div className="min-h-screen bg-gray-50">
       <div className="flex">
         {/* Left Sidebar with Navigation */}
-        <div className="w-64 min-h-screen bg-white shadow-lg border-r">
+        <div className="w-72 min-h-screen bg-white border-r border-gray-200">
           {/* Header */}
-          <div className="p-6 border-b">
-            <h1 className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+          <div className="p-6 border-b border-gray-100">
+            <h1 className="text-xl font-semibold text-gray-900">
               SkillSync
             </h1>
-            <p className="text-gray-600 text-sm mt-1">Build Your Portfolio</p>
+            <p className="text-sm text-gray-500 mt-1">Portfolio Builder</p>
           </div>
 
           {/* User Profile */}
-          <div className="p-4 border-b">
+          <div className="p-6 border-b border-gray-100">
             <UserProfile userProfile={userProfile} />
           </div>
 
           {/* Navigation Tabs */}
           <div className="p-4">
-            <nav className="space-y-2">
+            <nav className="space-y-1">
               {tabs.map((tab) => (
                 <Button
                   key={tab.id}
-                  variant={activeTab === tab.id ? "default" : "ghost"}
-                  className={`w-full justify-start transition-colors ${
+                  variant="ghost"
+                  className={`w-full justify-start h-10 px-3 font-normal ${
                     activeTab === tab.id 
-                      ? 'bg-blue-500 text-white hover:bg-blue-600' 
-                      : 'hover:bg-gray-100 text-gray-700'
+                      ? 'bg-gray-100 text-gray-900' 
+                      : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
                   }`}
                   onClick={() => setActiveTab(tab.id)}
                 >
@@ -154,9 +155,9 @@ const Index = () => {
 
         {/* Main Content Area */}
         <div className="flex-1">
-          <div className="container mx-auto px-8 py-8">
+          <div className="container mx-auto px-6 py-6">
             {/* Active Tab Content */}
-            <div className="space-y-6">
+            <div className="max-w-5xl">
               {renderActiveTab()}
             </div>
           </div>
